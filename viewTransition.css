@@ -1,0 +1,13 @@
+body{
+    border: 1px solid red;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 1s;
+  /*  animation-name: test;*/
+}
+@keyframes test {
+    from{top: -50px  }
+    to {top: inherit}
+    }
+
