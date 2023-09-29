@@ -19,7 +19,7 @@ describe('MainNav', () => {
                     FontAwesomeIcon: true,      //
                     RouterLink: RouterLinkStub  // Used to replace RouterLink(component) by RouterLinkStub (it is suports default stub)
                 },
-                mocks: {  //to replace anything we have under $this keyword!!!!!
+                mocks: {  //to replace anything we have under this keyword!!!!!
                     $route: $route
                 },
                 plugins:[pinia]

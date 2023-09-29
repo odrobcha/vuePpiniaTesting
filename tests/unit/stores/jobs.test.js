@@ -1,39 +1,30 @@
-import {createPinia, setActivePinia} from 'pinia'; //to test isolate pinia to register global pinia
-import {useJobsStore} from "@/stores/jobs";
+import { createPinia, setActivePinia } from "pinia";
+import { useJobsStore } from "@/stores/jobs";
+import axios from "axios";
+vi.mock("axios");
 
-import axios from 'axios';
-import { addStaticClass } from '@fortawesome/vue-fontawesome/src/utils';
-vi.mock(axios);
-
-
-describe("state", ()=>{
-    beforeEach(()=>{
-        setActivePinia(createPinia()); //create and register global pinia instance
+describe("state", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
     });
 
-    it("Stores  jobs listing", ()=>{
+    it("stores job listings", () => {
         const store = useJobsStore();
-        expect(store.jobs).toEqual([]);  //to test initial state = []
+        expect(store.jobs).toEqual([]);
     });
-
-
 });
 
-describe("actions", ()=>{
-    beforeEach(()=>{
-        setActivePinia(createPinia()); //create and register global pinia instance
+describe("actions", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
     });
-    describe("FETCH_JOBS", ()=>{
-        it("makes API reqest and stores received jobs", async ()=>{
-            axios.get.mockResolvedValue({data: ["JOB1", "JOB2"]});
 
+    describe("FETCH_JOBS", () => {
+        it("makes API request and stores received jobs", async () => {
+            axios.get.mockResolvedValue({ data: ["Job 1", "Job 2"] });
             const store = useJobsStore();
             await store.FETCH_JOBS();
-
-            expect(store.jobs).toBeEqual(["JOB1", "JOB2"]);
-
-        })
-    })
-
-})
-
+            expect(store.jobs).toEqual(["Job 1", "Job 2"]);
+        });
+    });
+});
