@@ -3,12 +3,11 @@ import userEvent from '@testing-library/user-event';
 import { RouterLinkStub } from '@vue/test-utils';
 import MainNav from '@/components/Navigation/MainNav.vue';
 import { createTestingPinia } from '@pinia/testing'; //to create testing pinia, Allactionby default going to be mocked
-import {useUserStore} from '../../../../src/stores/user';
 
 describe('MainNav', () => {
     const renderMainNav = () => {
         const pinia = createTestingPinia({
-          stubActions: true //if true - replace by mock function,if false- take the real pinia function, true  is default value
+          stubActions: false //if true - replace by mock function,if false- take the real pinia function
         });
         const $route = {     //to simulate $route with the needed property
             name: 'Home'
@@ -52,7 +51,6 @@ describe('MainNav', () => {
     describe('when the user logs in', () => {
         it('displays user profile picture', async () => {
             renderMainNav();
-            const userStore = useUserStore(); //we can overwrite any property directly
 
             let profileImage = screen.queryByRole('img', {
                 name: /user profile image/i,
@@ -62,7 +60,6 @@ describe('MainNav', () => {
             const loginButton = screen.getByRole('button', {
                 name: /sign in/i,
             });
-            userStore.isLoggedIn = true; ////!!!! here we simulate the click and it logic to set loggedIN to true
             await userEvent.click(loginButton);
 
             profileImage = screen.getByRole('img', {

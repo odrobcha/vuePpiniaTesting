@@ -34,8 +34,11 @@
 </template>
 
 <script>
+	import {mapActions, mapState} from 'pinia';
     import JobListing from './JobListing.vue';
-    import axios from 'axios';
+  //  import axios from 'axios';
+	import {useJobsStore, FETCH_JOBS} from '../../stores/jobs';
+
     export default {
         name: 'JobListings',
         components: { JobListing },
@@ -47,16 +50,25 @@
             -- production --> has reduce file size option (for example)
 			-- test --> has testing option
              */
-            const response = await axios.get(`${baseUrl}/jobs`);
-            this.jobs = response.data;
+            // try{
+            //     const response = await axios.get(`${baseUrl}/jobs`);
+            //     this.jobs = response.data;
+			// } catch (error){
+            //     console.log(error)
+			// }
+            // const response = await axios.get(`${baseUrl}/jobs`);
+			// this.jobs = response.data;
+
+			this.FETCH_JOBS();
         },
 		data(){
             return{
-                jobs:[],
+               // jobs:[],
 			}
 		},
 
 		computed:{
+                             //this means : this.jobs is equal to useJobsStore.jobs
             currentPage(){
                 return  Number.parseInt(this.$route.query.page || "1")
             },
@@ -65,20 +77,27 @@
               const firstPage = 1;
               return previousPage >= firstPage ? previousPage : undefined
 			},
+            ...mapState(useJobsStore, { //1 arg - storeName,
+                jobs: "jobs",        //2 - object. property name is top level property we want to be availble in THIS component, value - is the name of of property from the store
 
-			nextPage(){
-                const nextPage = this.currentPage + 1;
-                const lastPage = Math.ceil(this.jobs.length/10);
-
-                return nextPage <= lastPage? nextPage : undefined;
-			},
-            displayedJobs(){
-                const pageNumber = this.currentPage;
-                const firstJobIndex = (pageNumber - 1)* 10;
-                const lastJobIndex = pageNumber*10;
-                return this.jobs.slice(firstJobIndex, lastJobIndex);
-			}
+                nextPage(){
+                    const nextPage = this.currentPage + 1;
+                    const lastPage = Math.ceil(this.jobs.length/10);
+                    return nextPage <= lastPage? nextPage : undefined;
+                },
+                displayedJobs(){
+                    const pageNumber = this.currentPage;
+                    const firstJobIndex = (pageNumber - 1)* 10;
+                    const lastJobIndex = pageNumber*10;
+                    return this.jobs.slice(firstJobIndex, lastJobIndex);
+                }
+            }),
 		},
+
+		methods:{
+            ...mapActions(useJobsStore, [FETCH_JOBS]),
+		}
+
     };
 </script>
 

@@ -35,6 +35,11 @@
     import ActionButton from '@/components/Shared/ActionButton.vue';
     import ProfileImage from '@/components/Navigation/ProfileImage.vue';
     import TheSubnav from '@/components/Navigation/TheSubnav.vue';
+    import { mapStores } from 'pinia';  //is used in combination of useUserStore
+
+	import {mapActions, mapState} from 'pinia';
+
+    import {useUserStore} from '../../stores/user';
 
     export default {
         name: 'MainNav',
@@ -46,17 +51,22 @@
         data () {
             return {
                 menuItems: [
-					{text:'Teams', url: '/'},
-					{text:'Locations', url: '/'},
-					{text:'Life at Bobo Corp', url: '/'},
-					{text:'How we hire', url: '/'},
-					{text:'Students', url: '/'},
-					{text:'Jobs', url: '/jobs/results'},
+                    { text: 'Teams', url: '/' },
+                    { text: 'Locations', url: '/' },
+                    { text: 'Life at Bobo Corp', url: '/' },
+                    { text: 'How we hire', url: '/' },
+                    { text: 'Students', url: '/' },
+                    { text: 'Jobs', url: '/jobs/results' },
                 ],
-                isLoggedIn: false,
+
             };
         },
         computed: {
+            // ...mapStores(useUserStore), //all stores wichare neededinthe component,should to be pass to  mapStore/// it concantinate the the given name of store(user) with "Store" word =>userStore
+			// 							// store is accessible  under this.userStore
+
+			...mapState(useUserStore, ["isLoggedIn"]), // can be refered this.isLoggedIn /1 arg - storeName, 2 - array of properties,that we need to extract
+
             headerHeightClass () {
                 return {
                     'h-16': !this.isLoggedIn,
@@ -65,9 +75,10 @@
             },
         },
         methods: {
-            loginUser () {
-                this.isLoggedIn = true;
-            },
+            ...mapActions(useUserStore, ['loginUser']),
+            // loginUser () {
+            //     this.userStore.loginUser();
+            // },
         },
     };
 </script>
