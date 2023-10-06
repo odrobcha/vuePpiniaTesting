@@ -37,7 +37,7 @@
 	import {mapActions, mapState} from 'pinia';
     import JobListing from './JobListing.vue';
   //  import axios from 'axios';
-	import {useJobsStore, FETCH_JOBS} from '../../stores/jobs';
+	import {useJobsStore, FETCH_JOBS, FILTERED_JOBS} from '../../stores/jobs';
 
     export default {
         name: 'JobListings',
@@ -78,18 +78,20 @@
               return previousPage >= firstPage ? previousPage : undefined
 			},
             ...mapState(useJobsStore, { //1 arg - storeName,
-                jobs: "jobs",        //2 - object. property name is top level property we want to be availble in THIS component, value - is the name of of property from the store
+             //   jobs: "jobs",        //2 - object. property name is top level property we want to be availble in THIS component, value - is the name of of property from the store
+                FILTERED_JOBS,
+
 
                 nextPage(){
                     const nextPage = this.currentPage + 1;
-                    const lastPage = Math.ceil(this.jobs.length/10);
+                    const lastPage = Math.ceil(this.FILTERED_JOBS.length/10);
                     return nextPage <= lastPage? nextPage : undefined;
                 },
                 displayedJobs(){
                     const pageNumber = this.currentPage;
                     const firstJobIndex = (pageNumber - 1)* 10;
                     const lastJobIndex = pageNumber*10;
-                    return this.jobs.slice(firstJobIndex, lastJobIndex);
+                    return this.FILTERED_JOBS.slice(firstJobIndex, lastJobIndex);
                 }
             }),
 		},

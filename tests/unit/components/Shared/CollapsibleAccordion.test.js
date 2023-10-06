@@ -22,7 +22,7 @@ describe("CollapsibleAccordion", () => {
         });
     };
 
-    it.only("renders child content", async () => {
+    it("renders child content", async () => {
         const props = {
             header: "My Category",
         };
