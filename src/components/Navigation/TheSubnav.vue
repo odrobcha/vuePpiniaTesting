@@ -9,20 +9,20 @@
 	</div>
 </template>
 
-<script>
-	import {mapState} from 'pinia';
-	import {useJobsStore, FILTERED_JOBS} from '../../stores/jobs';
+<script setup>
+	import {useJobsStore} from '../../stores/jobs';
+	import {computed} from 'vue';
+	import {useRoute} from 'vue-router';
 
-    export default {
-        name: 'TheSubnav',
-        computed: {
-            ...mapState(useJobsStore, [FILTERED_JOBS]),
-            onJobResultsPage () {
-                return this.$route.name === 'JobResults'
-            },
-        },
-        data () {
-            return {};
-        },
-    };
+	const route = useRoute();
+    const onJobResultsPage = computed (() =>{
+        return route.name === 'JobResults'
+	});
+
+	const jobsStore = useJobsStore();  //to get access to pinia store we should wrap them to computed property
+	const FILTERED_JOBS = computed(()=>{
+	    return jobsStore.FILTERED_JOBS
+	})
+
+
 </script>

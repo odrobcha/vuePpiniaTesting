@@ -4,24 +4,25 @@ import { RouterLinkStub } from '@vue/test-utils';
 import MainNav from '@/components/Navigation/MainNav.vue';
 import { createTestingPinia } from '@pinia/testing'; //to create testing pinia, Allactionby default going to be mocked
 import {useUserStore} from '../../../../src/stores/user';
+import {useRoute} from "vue-router";
+vi.mock("vue-router");  //replace everything with vi fn
 
 describe('MainNav', () => {
     const renderMainNav = () => {
+        useRoute.mockReturnValue({name : "Home"});
+
         const pinia = createTestingPinia({
           stubActions: true //if true - replace by mock function,if false- take the real pinia function, true  is default value
         });
-        const $route = {     //to simulate $route with the needed property
-            name: 'Home'
-        };
+
+
         render(MainNav, {
             global: {
                 stubs: {
                     FontAwesomeIcon: true,      //
                     RouterLink: RouterLinkStub  // Used to replace RouterLink(component) by RouterLinkStub (it is suports default stub)
                 },
-                mocks: {  //to replace anything we have under this keyword!!!!!
-                    $route: $route
-                },
+
                 plugins:[pinia]
             },
         });

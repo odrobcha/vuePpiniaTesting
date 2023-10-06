@@ -1,15 +1,18 @@
 import {render, screen} from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
-import {vi} from 'vitest'
+import {useRouter} from "vue-router";
+vi.mock("vue-router");
+//import {vi} from 'vitest'
 
 
 import JobSearchForm from '../../../../src/components/JobSearch/JobSearchForm.vue';
 
 describe('JobSearchForm ',()=>{
     describe("When user describe form", ()=>{
-        it("It directs user to results page with enterd data as query", async ()=>{
+        it.only("It directs user to results page with enterd data as query", async ()=>{
             const push = vi.fn();  // global function via vitest. It is vitest mock function,which can track how many time it was invoked and with what arguments
-            const $router = {push}; //the $router const , has method push()
+            useRouter.mockReturnValue({push}) //to mock push method inuseRouter
+
 
             render(JobSearchForm,
               {
@@ -17,9 +20,7 @@ describe('JobSearchForm ',()=>{
                       stubs : {
                           FontAwesomeIcon: true
                       },
-                      mocks:{
-                          $router: $router //this.$router is equal to const $router
-                      }
+
                   }
               });
 

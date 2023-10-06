@@ -1,6 +1,6 @@
 <template>
-	<form   @submit.prevent="searchForJobs"
-			class="flex h-12 w-full items-center rounded-3xl border border-solid border-brand-gray-3"
+	<form @submit.prevent="searchForJobs"
+		  class="flex h-12 w-full items-center rounded-3xl border border-solid border-brand-gray-3"
 	>
 		<font-awesome-icon :icon="['fas', 'search']" class="ml-4 mr-3"/>
 
@@ -26,31 +26,23 @@
 	</form>
 </template>
 
-<script>
-    import ActionButton from '@/components/Shared/ActionButton.vue';
+<script setup>
+    import ActionButton from '@/components/Shared/ActionButton.vue'; //components are automatically availeble to use wit (setup)
     import TextInput from '@/components/Shared/TextInput.vue';
+    import { ref } from 'vue';
+    import { useRouter }from 'vue-router';
 
-    export default {
-        name: 'JobSearchForm',
-        components: { ActionButton, TextInput },
-        data () {
-            return {
-                role: '',
-                location: '',
-            };
-        },
-      methods:{
-        searchForJobs(){
-          this.$router.push({
-            name : "JobResults",
+    const role = ref('');
+    const location = ref('');
+    const router = useRouter();
+
+    const searchForJobs = () => {
+        router.push({
+            name: 'JobResults',
             query: {
-              role: this.role,
-              location : this.location
+                role: role.value,
+                location: location.value
             }
-
-          })
-        }
-      }
-
+        });
     };
 </script>
