@@ -4,7 +4,7 @@
 			<JobListing
 					v-for="job in displayedJobs"
 					:key="job.id"
-					:job = "job"
+					:job="job"
 			>
 			</JobListing>
 		</ol>
@@ -33,74 +33,36 @@
 
 </template>
 
-<script>
-	import {mapActions, mapState} from 'pinia';
+<script setup>
+    //import {mapActions, mapState} from 'pinia'; //exist only options API
+    import { computed, onMounted, ref } from 'vue';
+    import { useRoute } from 'vue-router';
     import JobListing from './JobListing.vue';
-  //  import axios from 'axios';
-	import {useJobsStore, FETCH_JOBS, FILTERED_JOBS} from '../../stores/jobs';
+    import { useJobsStore } from '../../stores/jobs';
+    import usePreviousAnNextPage from '../../composables/usePreviouseAndNextPages'
 
-    export default {
-        name: 'JobListings',
-        components: { JobListing },
-        async mounted(){
-            const baseUrl = import.meta.env.VITE_APP_API_URL; //depend on environment. Syntaxys to get EV variabledependes on envirenment only for VITE
-            /*
-            ENV
-            -- development --> has hot module reloading option (for example)
-            -- production --> has reduce file size option (for example)
-			-- test --> has testing option
-             */
-            // try{
-            //     const response = await axios.get(`${baseUrl}/jobs`);
-            //     this.jobs = response.data;
-			// } catch (error){
-            //     console.log(error)
-			// }
-            // const response = await axios.get(`${baseUrl}/jobs`);
-			// this.jobs = response.data;
+    const jobStore = useJobsStore();
+    onMounted(jobStore.FETCH_JOBS);
 
-			this.FETCH_JOBS();
-        },
-		data(){
-            return{
-               // jobs:[],
-			}
-		},
+    const route = useRoute();
 
-		computed:{
-                             //this means : this.jobs is equal to useJobsStore.jobs
-            currentPage(){
-                return  Number.parseInt(this.$route.query.page || "1")
-            },
-			previousPage(){
-              const previousPage = this.currentPage - 1;
-              const firstPage = 1;
-              return previousPage >= firstPage ? previousPage : undefined
-			},
-            ...mapState(useJobsStore, { //1 arg - storeName,
-             //   jobs: "jobs",        //2 - object. property name is top level property we want to be availble in THIS component, value - is the name of of property from the store
-                FILTERED_JOBS,
+    const currentPage = computed(() => {
+        return Number.parseInt(route.query.page || '1');
+    });
+    const FILTERED_JOBS = computed(()=>{
+        return jobStore.FILTERED_JOBS;
+    });
+    const maxPage = computed(() => Math.ceil(FILTERED_JOBS.value.length / 10));
+	const {previousPage, nextPage} = usePreviousAnNextPage(currentPage, maxPage);
+
+	const displayedJobs = computed(()=>{
+        const pageNumber = currentPage.value;
+        const firstJobIndex = (pageNumber - 1) * 10;
+        const lastJobIndex = pageNumber * 10;
+        return FILTERED_JOBS.value.slice(firstJobIndex, lastJobIndex);
+	})
 
 
-                nextPage(){
-                    const nextPage = this.currentPage + 1;
-                    const lastPage = Math.ceil(this.FILTERED_JOBS.length/10);
-                    return nextPage <= lastPage? nextPage : undefined;
-                },
-                displayedJobs(){
-                    const pageNumber = this.currentPage;
-                    const firstJobIndex = (pageNumber - 1)* 10;
-                    const lastJobIndex = pageNumber*10;
-                    return this.FILTERED_JOBS.slice(firstJobIndex, lastJobIndex);
-                }
-            }),
-		},
-
-		methods:{
-            ...mapActions(useJobsStore, [FETCH_JOBS]),
-		}
-
-    };
 </script>
 
 <style scoped>

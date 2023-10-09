@@ -46,7 +46,6 @@
         return jobStore.UNIQUE_ORGANIZATIONS
 	});
 
-    console.log(UNIQUE_ORGANIZATIONS.value)
     const UNIQUE_JOB_TYPES = computed (()=>{
         return jobStore.UNIQUE_JOB_TYPES
     });

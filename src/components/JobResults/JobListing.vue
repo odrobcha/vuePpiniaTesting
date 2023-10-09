@@ -23,7 +23,7 @@
 					<h3 class="mt-2 mb-2">Qualification:</h3>
 					<ul class="list-disc pl-8">
 						<li v-for="qalification in job.minimumQualifications"
-							:key = {qalification}
+							:key={qalification}
 						>
 							{{qalification}}
 						</li>
@@ -43,24 +43,17 @@
 	</li>
 </template>
 
-<script>
-    export default {
-        name: 'JobListing',
-        props: {
-            job: {
-                type: Object,
-                required: true,
-            }
-        },
-        computed: {
-            jobPageLink () {
-                return `results/${this.job.id}`;
-            }
-        },
-        mounted () {
-
+<script setup>
+    import { computed } from 'vue';
+    const props = defineProps({
+        job: {
+            type: Object,
+            required: true,
         }
-    };
+    });
+    const jobPageLink = computed(()=>{
+        return `results/${props.job.id}`;
+	});
 </script>
 
 <style scoped>
