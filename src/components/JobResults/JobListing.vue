@@ -45,15 +45,16 @@
 
 <script setup>
     import { computed } from 'vue';
+
     const props = defineProps({
         job: {
             type: Object,
             required: true,
         }
     });
-    const jobPageLink = computed(()=>{
+    const jobPageLink = computed(() => {
         return `results/${props.job.id}`;
-	});
+    });
 </script>
 
 <style scoped>
