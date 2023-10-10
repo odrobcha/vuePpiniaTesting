@@ -9,12 +9,12 @@
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import {useJobsStore} from '../../stores/jobs';
 	import {computed} from 'vue';
 	import {useRoute} from 'vue-router';
-
 	const route = useRoute();
+
     const onJobResultsPage = computed (() =>{
         return route.name === 'JobResults'
 	});

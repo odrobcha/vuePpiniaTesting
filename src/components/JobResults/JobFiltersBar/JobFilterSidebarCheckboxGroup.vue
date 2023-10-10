@@ -20,9 +20,9 @@
 	</collapsible-accordion>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import CollapsibleAccordion from '../../Shared/CollapsibleAccordion.vue';
-    import {ref} from 'vue';
+    import {ref, defineProps} from 'vue';
     import {useRouter} from "vue-router";
     const router = useRouter();
 	const props = defineProps({
@@ -36,10 +36,10 @@
 		},
 		action: {
 		    type: Function,
-			required: true
+      required: true
 		}
 	});
-    const selectedValues = ref([]);
+    const selectedValues = ref<string[]>([]);
     const selectValue = ()=>{
         props.action(selectedValues.value);
         router.push({name : "JobResults"});

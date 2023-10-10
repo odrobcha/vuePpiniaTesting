@@ -33,8 +33,7 @@
 
 </template>
 
-<script setup>
-    //import {mapActions, mapState} from 'pinia'; //exist only options API
+<script setup lang="ts">
     import { computed, onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router';
     import JobListing from './JobListing.vue';
@@ -42,14 +41,16 @@
     import usePreviousAnNextPage from '../../composables/usePreviouseAndNextPages'
 
     const jobStore = useJobsStore();
+    //@ts-expect-error
     onMounted(jobStore.FETCH_JOBS);
 
     const route = useRoute();
 
     const currentPage = computed(() => {
-        return Number.parseInt(route.query.page || '1');
+        return Number.parseInt(route.query.page as string || '1');
     });
     const FILTERED_JOBS = computed(()=>{
+      //@ts-expect-error
         return jobStore.FILTERED_JOBS;
     });
     const maxPage = computed(() => Math.ceil(FILTERED_JOBS.value.length / 10));

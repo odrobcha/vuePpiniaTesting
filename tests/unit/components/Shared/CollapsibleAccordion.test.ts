@@ -39,7 +39,7 @@ describe("CollapsibleAccordion", () => {
     });
 
 
-   describe("When parrent doesnot privade slot content",  () => {
+   describe("When parent does not provide slot content",  () => {
        it("renders default content", async () => {
            const props = {
                header: "My category"

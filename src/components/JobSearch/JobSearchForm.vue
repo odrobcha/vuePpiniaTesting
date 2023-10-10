@@ -26,7 +26,7 @@
 	</form>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import ActionButton from '@/components/Shared/ActionButton.vue'; //components are automatically availeble to use wit (setup)
     import TextInput from '@/components/Shared/TextInput.vue';
     import { ref } from 'vue';

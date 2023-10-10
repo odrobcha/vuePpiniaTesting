@@ -1,18 +1,12 @@
 import { render, screen } from '@testing-library/vue';
 import { RouterLinkStub } from '@vue/test-utils';
 import JobListing from '../../../../src/components/JobResults/JobListing.vue';
+import type {Job} from "@/api/types";
+import {createJob} from "../../../utils/createJob";
 
 describe('JobListing', () => {
-    const createJobProps = (jobProps = {}) =>{ // default value is {}
-        return {
-            title: 'Vue Developer',
-            organization: 'AirBnB',
-            locations: ["Gent"],
-            minimumQualifications: ['Code'],
-              ...jobProps  //to overwrite title or organization if needed
-        }
-    };
-    const renderJobListing = (jobProps) => {
+
+    const renderJobListing = (job:Job) => {
         render(JobListing, {
             global: {
                 stubs: {
@@ -21,32 +15,32 @@ describe('JobListing', () => {
             },
             props: {
                 job: {
-                    ...jobProps
+                    ...job
                 }
             }
         });
     };
     it('Renders job title', () => {
-        const jobProps = createJobProps({title: "Vue Programmer"});
+        const jobProps = createJob({title: "Vue Programmer"});
         renderJobListing(jobProps);
         expect(screen.getByText('Vue Programmer')).toBeInTheDocument();
     });
 
     it('Renders job organization', () => {
-        const jobProps = createJobProps({organization: "Test organization"});
+        const jobProps = createJob({organization: "Test organization"});
         renderJobListing(jobProps);
         expect(screen.getByText('Test organization')).toBeInTheDocument();
     });
 
     it('Renders job locations', ()=>{
-        const jobProps = createJobProps({locations: ['Gent', "Lviv"]});
+        const jobProps = createJob({locations: ['Gent', "Lviv"]});
         renderJobListing(jobProps);
         expect(screen.getByText('Gent')).toBeInTheDocument();
         expect(screen.getByText("Lviv")).toBeInTheDocument();
     });
 
     it('Renders job qulalifications', ()=>{
-        const jobProps = createJobProps({minimumQualifications: ['Code', "Develop"]});
+        const jobProps = createJob({minimumQualifications: ['Code', "Develop"]});
         renderJobListing(jobProps);
         expect(screen.getByText('Code')).toBeInTheDocument();
         expect(screen.getByText("Develop")).toBeInTheDocument();

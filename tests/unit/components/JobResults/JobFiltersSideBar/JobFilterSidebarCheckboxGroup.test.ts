@@ -1,3 +1,4 @@
+import {Mock} from "vitest";
 import { render, screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { createTestingPinia } from "@pinia/testing";
@@ -6,10 +7,16 @@ import JobFilterSidebarCheckboxGroup    from '../../../../../src/components/JobR
 
 
 import {useRouter} from "vue-router";
+const useRouterMock = useRouter as Mock;
 vi.mock("vue-router");
 
 describe("JobFilterSidebarCheckboxGroup", () => {
-    const createProps = (props = {})=>{
+    interface JobFiltersSideBarCheckBoxGroups {
+        header: string,
+        uniqueValues: Set<string>
+        action: Mock
+    }
+    const createProps = (props:Partial<JobFiltersSideBarCheckBoxGroups>  = {}): JobFiltersSideBarCheckBoxGroups=>{
         return {
             header : "Some header",
             uniqueValues : new Set(['valueA', 'valueB']),
@@ -18,7 +25,7 @@ describe("JobFilterSidebarCheckboxGroup", () => {
         }
     };
 
-    const renderJobFiltersSidebarCheckboxGroup = (props) => {
+    const renderJobFiltersSidebarCheckboxGroup = (props: JobFiltersSideBarCheckBoxGroups) => {
         const pinia = createTestingPinia();
 
         render(JobFilterSidebarCheckboxGroup, {
@@ -52,7 +59,7 @@ describe("JobFilterSidebarCheckboxGroup", () => {
 
     describe("When user click checkbox" , () =>{
         it("communicates that user has selected checkbox for job type", async () => {
-            useRouter.mockReturnValue({push: vi.fn()});
+            useRouterMock.mockReturnValue({push: vi.fn()});
             const action = vi.fn();
             const props = createProps({
                 header: "Job types",
@@ -76,7 +83,7 @@ describe("JobFilterSidebarCheckboxGroup", () => {
 
         it('navigates user to /jobs/results on clicking on checkbox', async ()=>{
             const push = vi.fn();
-            useRouter.mockReturnValue({push});
+            useRouterMock.mockReturnValue({push});
             const props = createProps({
                 header: "Job types",
                 uniqueValues: new Set(["Full-time", "Part-time"]),

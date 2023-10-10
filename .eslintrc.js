@@ -12,9 +12,9 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:vue/vue3-essential',
 
-        'plugin:vue/vue3-recommeded',
+        'plugin:vue/vue3-recommended',
         '@vue/eslint-config-prettier',
-        'plugin:vitest-global/recommended'
+        'plugin:vitest-globals/recommended'
     ],
     'overrides': [
         {
