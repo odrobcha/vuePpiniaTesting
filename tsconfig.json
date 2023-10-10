@@ -142,7 +142,8 @@
     "src/**/*",
     "src/**/*.vue",
     "tests/**/*",
-    "node_modules/vitest/globals.d.ts"
+    "node_modules/vitest/globals.d.ts",
+    "./jest-setup.ts"
   ],
   "exclude": [],
   "compilerOptions": {
