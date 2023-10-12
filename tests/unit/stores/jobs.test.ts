@@ -1,14 +1,16 @@
 import type {Mock} from 'vitest';
 import {createPinia, setActivePinia} from "pinia";
-import {useJobsStore} from "@/stores/jobs";
-import axios from "axios";
-import {UNIQUE_ORGANIZATIONS} from '../../../src/stores/jobs';
 
+import axios from "axios";
 vi.mock("axios");
 const axiosGetMock = axios.get as Mock; //to makeTS interpreted axios.get as Mock
+
 import {useUserStore} from '../../../src/stores/user';
-import {expect} from 'vitest';
+
+import {useJobsStore} from "@/stores/jobs";
+import {UNIQUE_ORGANIZATIONS} from '../../../src/stores/jobs';
 import {createJob} from "../../utils/createJob";
+
 
 describe("state", () => {
     beforeEach(() => {
@@ -150,5 +152,96 @@ describe("Getters", () => {
         })
     });
 
+    describe("INCLUDE_JOB_BY_DEGREE", () => {
+        describe('When user selected no degree', () => {
+            it("includes jobs", () => {
+                const userStore = useUserStore();
+                userStore.selectedDegrees = [];
+
+                const jobStore = useJobsStore();
+                const job = createJob();
+
+                const result = jobStore.INCLUDE_JOB_BY_DEGREE(job);
+                expect(result).toBe(true);
+
+            })
+        });
+
+        describe("if job is assosiated with selected job type", () => {
+            it("identifies if job isassosiated with given job type", () => {
+                const userStore = useUserStore();
+                userStore.selectedDegrees = ["Master's"];
+                const store = useJobsStore();
+                const job = createJob({ degree: "Master's" });
+
+                const result = store.INCLUDE_JOB_BY_DEGREE(job);
+
+                expect(result).toBe(true);
+            });
+            it(" identifies if job is NOT assosiated with given job type", () => {
+                const userStore = useUserStore();
+                userStore.selectedDegrees = ["Master's"];
+
+                const jobStore = useJobsStore();
+                const job = createJob({degree: "Master"});
+
+                const result = jobStore.INCLUDE_JOB_BY_DEGREE(job);
+                expect(result).toBe(false);
+            })
+        })
+    });
+
+    describe("INCLUDE_JOB_BY_SKILL", ()=>{
+        it("identifies if job  matches users term", ()=>{
+            const userStore = useUserStore();
+            userStore.skillsSearchTerm = "test skill";
+
+            const jobStore = useJobsStore();
+            const job = createJob({title: "test skill"});
+
+            const result = jobStore.INCLUDE_JOB_BY_SKILL(job);
+            expect(result).toBe(true);
+
+        })
+
+        it("identifies if job DOES NOT  match users term", ()=>{
+            const userStore = useUserStore();
+            userStore.skillsSearchTerm = "somthing";
+
+            const jobStore = useJobsStore();
+            const job = createJob({title: "test skill"});
+
+            const result = jobStore.INCLUDE_JOB_BY_SKILL(job);
+            expect(result).toBe(false);
+        })
+
+        it("handles inconsistent character casing", ()=>{
+            const userStore = useUserStore();
+            userStore.skillsSearchTerm = "TeSt";
+
+            const jobStore = useJobsStore();
+            const job = createJob({title: "test"});
+
+            const result = jobStore.INCLUDE_JOB_BY_SKILL(job);
+            expect(result).toBe(true);
+
+        })
+
+        describe("when user do not enter anything",()=>{
+            it.only("should return all jobs", ()=>{
+                const userStore = useUserStore();
+                userStore.skillsSearchTerm = "";
+
+                const jobStore = useJobsStore();
+                const job = createJob({title: "test"});
+
+                const result = jobStore.INCLUDE_JOB_BY_SKILL(job);
+                expect(result).toBe(true);
+            })
+        })
+
+
+
+    })
 
 });

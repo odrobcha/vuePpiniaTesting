@@ -60,7 +60,7 @@ const headerHeightClass = computed(()=>{
 })
 
 const loginUser = () =>{
-  userStore.loginUser();
+  userStore.LOGIN_USER();
 }
 
 </script>

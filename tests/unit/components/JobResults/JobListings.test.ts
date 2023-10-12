@@ -5,6 +5,7 @@ import JobListings from '../../../../src/components/JobResults/JobListings.vue';
 import { createTestingPinia } from '@pinia/testing'; //to test testing pinia to register global pinia
 import { expect } from 'vitest';
 import { useJobsStore } from '../../../../src/stores/jobs';
+import { useDegreesStore } from '../../../../src/stores/degrees';
 import { useRoute } from "vue-router";
 vi.mock("vue-router");
 
@@ -16,6 +17,7 @@ describe('JobListings', () => {
         const pinia = createTestingPinia();
 
         const jobsStore = useJobsStore();
+        const degreesStore = useDegreesStore();
         jobsStore.FILTERED_JOBS = Array(15).fill({});
         render(JobListings, {
             global: {
@@ -26,7 +28,7 @@ describe('JobListings', () => {
             },
         });
 
-        return { jobsStore };
+        return { jobsStore, degreesStore  };
     };
     it('Fetches jobs', () => {
         useRouteMock.mockReturnValue({ query: {} });
@@ -34,6 +36,13 @@ describe('JobListings', () => {
         //@ts-expect-error
         expect(jobsStore.FETCH_JOBS).toHaveBeenCalled();
     });
+
+    it('Fetches degrees', ()=>{
+        useRouteMock.mockReturnValue({ query: {} });
+        const { degreesStore } = renderJobListings();
+        //@ts-expect-error
+        expect(degreesStore.FETCH_DEGREES).toHaveBeenCalled();
+    })
 
     it('It desplays max 10 jobs', async () => {
         useRouteMock.mockReturnValue({ query: {page:1} });

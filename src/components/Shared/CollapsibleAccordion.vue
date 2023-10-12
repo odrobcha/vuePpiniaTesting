@@ -15,8 +15,6 @@
 		>
 			<slot>
 				Please, add slot content
-
-
 			</slot>
 		</div>
 	</div>
@@ -24,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-    import { computed, ref } from 'vue';
+    import { computed, ref, defineProps } from 'vue';
     defineProps({
         header: {
             type: String,

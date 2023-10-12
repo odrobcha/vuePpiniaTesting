@@ -1,6 +1,6 @@
-import {useUserStore} from '../../../src/stores/user';
-import {createPinia, setActivePinia} from 'pinia';
-import { expect } from 'vitest'; //to test isolate pinia to register global pinia
+import {ADD_SELECTED_DEGREES, useUserStore} from '../../../src/stores/user';
+import {createPinia, setActivePinia} from 'pinia'; //to test isolate pinia to register global pinia
+import { expect } from 'vitest';
 
 describe("state", ()=>{
     beforeEach(()=>{
@@ -11,13 +11,22 @@ describe("state", ()=>{
         const store = useUserStore();
         expect(store.isLoggedIn).toBe(false)
     });
-    it('stores the organization that heuser wouldlike to filter', ()=>{
+    it('stores the organization that heuser would like to filter', ()=>{
         const store = useUserStore();
         expect(store.selectedOrganizations).toEqual([])
     });
     it ("stores jobtypes that user would like to filter", ()=>{
         const store = useUserStore();
         expect(store.selectedJobTypes).toEqual([]);
+    })
+    it("stored degrees that user would like to filter", ()=>{
+        const store = useUserStore();
+        expect(store.selectedDegrees).toEqual([]);
+    })
+    it("stores users search term for skills", ()=>{
+        const store = useUserStore();
+        expect(store.skillsSearchTerm).toBe("");
+
     })
 
 });
@@ -29,7 +38,7 @@ describe("actions", ()=>{
     describe("login User", ()=>{
         it('Logs the user',()=>{
             const store = useUserStore();
-            store.loginUser();
+            store.LOGIN_USER();
             expect(store.isLoggedIn).toBe(true);
         })
     })
@@ -52,5 +61,42 @@ describe("actions", ()=>{
             expect(store.selectedJobTypes).toEqual(["type1", "type2"]);
         })
     })
+
+    describe("ADD_SELECTED_DEGREES", ()=>{
+        it("update degrees user has chosen", ()=>{
+            const store = useUserStore();
+            store.ADD_SELECTED_DEGREES(["Bachelor's", "Master's"]);
+
+            expect(store.selectedDegrees).toEqual(["Bachelor's", "Master's"]);
+        })
+    })
+    describe("UPDATE_SKILLS_SEARCH_TERM", ()=>{
+        it("receives search term for skills the user has entered", ()=>{
+            const store = useUserStore();
+            store.skillsSearchTerm = '';
+
+            store.UPDATE_SKILLS_SEARCH_TERM("test");
+            expect(store.skillsSearchTerm).toBe("test");
+        })
+
+    })
+    describe("CLEAR_USER_JOB_FILTER_SELECTIONS", ()=>{
+        it("removes all finters that user has chosen", ()=>{
+            const store = useUserStore();
+            store.selectedOrganizations = ["test"];
+            store.selectedJobTypes = ["test"];
+            store.selectedDegrees = ["test"];
+            store.skillsSearchTerm = ["test"];
+
+            store.CLEAR_USER_JOB_FILTER_SELECTIONS();
+
+            expect(store.selectedOrganizations).toEqual([]);
+            expect(store.selectedJobTypes).toEqual([]);
+            expect(store.selectedDegrees).toEqual([]);
+            expect(store.skillsSearchTerm).toBe('');
+        })
+    })
+
+
 
 })
